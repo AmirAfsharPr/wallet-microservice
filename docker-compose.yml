@@ -1,0 +1,126 @@
+services:
+  # سرویس auth-service
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: auth-service
+    volumes:
+      - ./auth-service:/var/www
+    ports:
+      - "8001:9000"
+    networks:
+      - wallet-net
+    depends_on:
+      - mysql-auth
+    command: bash -c "php artisan serve --host=0.0.0.0 --port=9000 > /var/www/storage/logs/server.log 2>&1"
+
+  # سرویس mysql برای auth-service
+  mysql-auth:
+    image: mysql:8
+    container_name: mysql-auth
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: auth_service
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_auth_data:/var/lib/mysql
+    networks:
+      - wallet-net
+
+  # سرویس payment-service
+  payment-service:
+    build:
+      context: ./payment-service
+    container_name: payment-service
+    volumes:
+      - ./payment-service:/var/www
+    ports:
+      - "8002:9000"
+    networks:
+      - wallet-net
+    depends_on:
+      - mysql-payment
+
+  # سرویس mysql برای payment-service
+  mysql-payment:
+    image: mysql:8
+    container_name: mysql-payment
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: payment_service
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_payment_data:/var/lib/mysql
+    networks:
+      - wallet-net
+
+  # سرویس transaction-service
+  transaction-service:
+    build:
+      context: ./transaction-service
+    container_name: transaction-service
+    volumes:
+      - ./transaction-service:/var/www
+    ports:
+      - "8005:9000"
+    networks:
+      - wallet-net
+    depends_on:
+      - mysql-transaction
+
+  # سرویس mysql برای transaction-service
+  mysql-transaction:
+    image: mysql:8
+    container_name: mysql-transaction
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: transaction_service
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_transaction_data:/var/lib/mysql
+    networks:
+      - wallet-net
+
+  # سرویس wallet-service
+  wallet-service:
+    build:
+      context: ./wallet-service
+    container_name: wallet-service
+    volumes:
+      - ./wallet-service:/var/www
+    ports:
+      - "8006:9000"
+    networks:
+      - wallet-net
+    depends_on:
+      - mysql-wallet
+
+  # سرویس mysql برای wallet-service
+  mysql-wallet:
+    image: mysql:8
+    container_name: mysql-wallet
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wallet_service
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql_wallet_data:/var/lib/mysql
+    networks:
+      - wallet-net
+
+networks:
+  wallet-net:
+
+volumes:
+  mysql_auth_data:
+  mysql_payment_data:
+  mysql_transaction_data:
+  mysql_wallet_data:

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PHPUnit">
+    <option name="directories">
+      <list>
+        <option value="$PROJECT_DIR$/wallet-service/tests/Unit" />
+        <option value="$PROJECT_DIR$/wallet-service/tests/Feature" />
+        <option value="$PROJECT_DIR$/transaction-service/tests/Unit" />
+        <option value="$PROJECT_DIR$/transaction-service/tests/Feature" />
+        <option value="$PROJECT_DIR$/payment-service/tests/Unit" />
+        <option value="$PROJECT_DIR$/payment-service/tests/Feature" />
+        <option value="$PROJECT_DIR$/auth-service/tests/Unit" />
+        <option value="$PROJECT_DIR$/auth-service/tests/Feature" />
+      </list>
+    </option>
+  </component>
+</project>
